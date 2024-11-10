@@ -1,7 +1,6 @@
 package br.com.queenfitstyle.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +11,6 @@ import java.util.Set;
 @Entity
 @Table(name = "usuarios")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class Usuario implements UserDetails {
     @Id
@@ -26,6 +24,12 @@ public class Usuario implements UserDetails {
     @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    public Usuario(String login, String senha) {
+        this.login = login;
+        this.senha = senha;
+    }
+
 
     @Override
     public Collection<Role> getAuthorities() {
