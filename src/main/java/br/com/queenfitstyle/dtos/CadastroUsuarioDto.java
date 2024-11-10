@@ -9,7 +9,7 @@ public record CadastroUsuarioDto(
 
         @NotNull
         @Email
-        String login,
+        String email,
 
         @NotNull
         @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres.")
