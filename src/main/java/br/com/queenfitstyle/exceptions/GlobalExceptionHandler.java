@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiErro, status);
     }
 
-    @ExceptionHandler(UsuarioException.class)
+    @ExceptionHandler({UsuarioException.class,
+    InvalidTokenException.class})
     public ResponseEntity<ApiErro> handleValidationExceptions(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
