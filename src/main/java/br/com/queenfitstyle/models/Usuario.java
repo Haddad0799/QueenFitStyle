@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,11 +24,13 @@ public class Usuario implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
     public Usuario(String login, String senha) {
         this.login = login;
         this.senha = senha;
+        this.roles = new HashSet<>();
     }
 
 

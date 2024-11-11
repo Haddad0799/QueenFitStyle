@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,18 +20,18 @@ import java.io.IOException;
 public class JwtAutenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UsuarioService usuarioService;
+    private final ApplicationContext applicationContext;
 
-    public JwtAutenticationFilter(JwtUtil jwtUtil, UsuarioService usuarioService) {
+    public JwtAutenticationFilter(JwtUtil jwtUtil, ApplicationContext applicationContext) {
         this.jwtUtil = jwtUtil;
-        this.usuarioService = usuarioService;
+        this.applicationContext = applicationContext;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // Se o endpoint não requer autenticação, continue a cadeia de filtros
-        if (!endpointBloqueado(request)) {
+        if (isEndpointLiberado(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -38,25 +39,24 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
         // Recupera o token JWT do cabeçalho Authorization
         String tokenJwt = recuperarToken(request);
 
-        // Extrai o subject do token e carrega o usuário
+        // Obtém o usuário através do serviço, usando o contexto da aplicação
+        UsuarioService usuarioService = applicationContext.getBean(UsuarioService.class);
         String subject = jwtUtil.getSubject(tokenJwt);
         UserDetails userDetails = usuarioService.loadUserByUsername(subject);
 
-        // Cria a autenticação e a define no contexto de segurança
         var usuarioAutenticado = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
 
-        // Prossegue com o restante da cadeia de filtros
         filterChain.doFilter(request, response);
     }
 
-    private Boolean endpointBloqueado(HttpServletRequest request) {
+    private Boolean isEndpointLiberado(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
-
-        return !requestUri.equalsIgnoreCase("/login") &&
-                !requestUri.equalsIgnoreCase("/usuarios/cadastro-cliente") &&
-                !requestUri.startsWith("/swagger-ui") &&
-                !requestUri.startsWith("/v3/api-docs");
+        return requestUri.equalsIgnoreCase("/login") ||
+                requestUri.equalsIgnoreCase("/usuarios/cadastrar-cliente") ||
+                requestUri.equalsIgnoreCase("/usuarios/cadastrar-admin") ||
+                requestUri.startsWith("/swagger-ui") ||
+                requestUri.startsWith("/v3/api-docs");
     }
 
     private String recuperarToken(HttpServletRequest request) {

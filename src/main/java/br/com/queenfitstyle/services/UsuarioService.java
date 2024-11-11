@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Service
 public class UsuarioService implements UserDetailsService {
 
@@ -29,7 +31,7 @@ public class UsuarioService implements UserDetailsService {
             }
 
            Usuario usuario = new Usuario(dto.email(), passwordEncoder.encode(dto.senha()));
-           setRole(usuario,Role.ROLE_CLIENTE);
+           usuario.getRoles().add(Role.ROLE_CLIENTE);
            usuarioRepository.save(usuario);
     }
 
@@ -40,12 +42,8 @@ public class UsuarioService implements UserDetailsService {
         }
 
         Usuario usuario = new Usuario(dto.email(), passwordEncoder.encode(dto.senha()));
-        setRole(usuario,Role.ROLE_ADMIN);
+        usuario.getRoles().add(Role.ROLE_ADMIN);
         usuarioRepository.save(usuario);
-    }
-
-    private void setRole(Usuario usuario, Role role) {
-        usuario.getRoles().add(role);
     }
 
     @Override

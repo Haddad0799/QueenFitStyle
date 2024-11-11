@@ -32,7 +32,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/usuarios/cadastro-cliente").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/usuarios/cadastrar-cliente").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/usuarios/cadastrar-admin").permitAll()
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
