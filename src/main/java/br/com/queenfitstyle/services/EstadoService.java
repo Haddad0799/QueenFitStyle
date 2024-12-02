@@ -1,6 +1,5 @@
 package br.com.queenfitstyle.services;
 
-import br.com.queenfitstyle.infra.service.IntegracaoIbgeApiService;
 import br.com.queenfitstyle.models.DadoEstadoIbge;
 import br.com.queenfitstyle.models.Estado;
 import br.com.queenfitstyle.repositorys.EstadoRepository;
