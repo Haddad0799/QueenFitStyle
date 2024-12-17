@@ -1,5 +1,7 @@
-package br.com.queenfitstyle.infra.config;
+package br.com.queenfitstyle.infra.security.config;
 
+import br.com.queenfitstyle.infra.util.CustomAccessDeniedHandler;
+import br.com.queenfitstyle.infra.util.CustomAuthenticationEntryPoint;
 import br.com.queenfitstyle.infra.filter.JwtAutenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAutenticationFilter jwtAutenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(JwtAutenticationFilter jwtAutenticationFilter) {
+    public SecurityConfig(JwtAutenticationFilter jwtAutenticationFilter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.jwtAutenticationFilter = jwtAutenticationFilter;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -32,12 +38,20 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/usuarios/cadastrar-cliente").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/usuarios/cadastrar-admin").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/enderecos/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register/admin").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/cliente/**").hasRole("CLIENTE")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
                 .addFilterBefore(jwtAutenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

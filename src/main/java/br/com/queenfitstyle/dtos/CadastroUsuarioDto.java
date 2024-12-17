@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record CadastroUsuarioDto(
 
         @NotNull
-        @Email
+        @Email(message = "Email inválido")
         String email,
 
         @NotNull

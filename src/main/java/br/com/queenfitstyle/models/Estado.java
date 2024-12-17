@@ -1,9 +1,12 @@
 package br.com.queenfitstyle.models;
 
+import br.com.queenfitstyle.dtos.CadastroEnderecoDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "estados")
@@ -14,14 +17,18 @@ public class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long estadoId;
+    private Long estadoId;
 
-    private String sigla;
+    private String uf;
 
     private String nome;
 
-    public Estado(DadoEstadoIbge dadoEstadoIbge) {
-        this.sigla = dadoEstadoIbge.sigla();
-        this.nome = dadoEstadoIbge.nome();
+    @OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cidade> cidades;
+
+
+    public Estado(CadastroEnderecoDto dto) {
+        this.uf = dto.uf();
+        this.nome = dto.estado();
     }
 }

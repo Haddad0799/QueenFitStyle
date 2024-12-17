@@ -2,6 +2,7 @@ package br.com.queenfitstyle.infra.util;
 
 import br.com.queenfitstyle.exceptions.FalhaAoGerarTokenException;
 import br.com.queenfitstyle.exceptions.InvalidTokenException;
+import br.com.queenfitstyle.models.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -20,14 +21,14 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public String gerarToken(String username) {
+    public String gerarToken(Usuario usuario) {
         var algoritmo = Algorithm.HMAC256(jwtSecret);
         Instant tempoDeExpiracao = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         try {
             return JWT.create()
                     .withIssuer("queenfitstyle")
-                    .withSubject(username)
+                    .withSubject(usuario.getLogin())
                     .withExpiresAt(tempoDeExpiracao)
                     .sign(algoritmo);
         } catch (JWTCreationException ex) {
@@ -48,6 +49,5 @@ public class JwtUtil {
             throw new InvalidTokenException();
         }
     }
-
 
 }

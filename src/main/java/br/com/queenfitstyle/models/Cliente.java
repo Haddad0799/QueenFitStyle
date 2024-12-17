@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "clientes")
@@ -18,14 +19,17 @@ public class Cliente {
 
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false)
+    @Setter
     private Usuario usuario;
 
     private String nomeCompleto;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_id")
+    @Setter
     private Endereco endereco;
 
     private String telefone;
+
 }
 

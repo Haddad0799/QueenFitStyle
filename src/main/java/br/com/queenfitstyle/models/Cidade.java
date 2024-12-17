@@ -16,12 +16,14 @@ public class Cidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cidadeId;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id")
+    @ManyToOne
+    @JoinColumn(name = "estado_id", nullable = false)
     private Estado estado;
 
     private String nome;
 
-
-
+    public Cidade(String nome, Estado estado) {
+        this.nome = nome;
+        this.estado = estado;
+    }
 }

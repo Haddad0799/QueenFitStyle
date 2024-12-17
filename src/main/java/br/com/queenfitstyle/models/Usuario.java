@@ -3,6 +3,7 @@ package br.com.queenfitstyle.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -21,23 +22,37 @@ public class Usuario implements UserDetails {
     private String senha;
 
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
 
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Cliente cliente;
+
     public Usuario(String login, String senha) {
         this.login = login;
         this.senha = senha;
+        this.cliente = null;
         this.roles = new HashSet<>();
     }
 
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+        cliente.setUsuario(this);
+    }
+
+    public boolean isClient() {
+        return cliente != null;
+    }
 
     @Override
-    public Collection<Role> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
+
 
     @Override
     public String getPassword() {
@@ -67,5 +82,16 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "usuarioId=" + usuarioId +
+                ", login='" + login + '\'' +
+                ", senha='" + senha + '\'' +
+                ", roles=" + roles +
+                ", cliente=" + cliente +
+                '}';
     }
 }

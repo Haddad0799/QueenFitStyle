@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/register")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -18,13 +18,13 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-    @PostMapping("/cadastrar-cliente")
+    @PostMapping
     public ResponseEntity<String> cadastrarCliente(@RequestBody @Valid CadastroUsuarioDto dto) {
         usuarioService.cadastrarUsuarioCliente(dto);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
     }
 
-    @PostMapping("/cadastrar-admin")
+    @PostMapping("/admin")
     public ResponseEntity<String> cadastrarAdmin(@RequestBody @Valid CadastroUsuarioDto dto) {
         usuarioService.cadastrarUsuarioAdmin(dto);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");

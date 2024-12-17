@@ -1,9 +1,11 @@
 package br.com.queenfitstyle.models;
 
+import br.com.queenfitstyle.dtos.CadastroEnderecoDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "enderecos")
@@ -17,16 +19,14 @@ public class Endereco {
 
     @OneToOne
     @JoinColumn(name = "cliente_id")
+    @Setter
     private Cliente cliente;
 
     private String cep;
 
-    @OneToOne
-    @JoinColumn(name = "estado_id")
-    private Estado estado;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cidade_id")
+    @Setter
     private Cidade cidade;
 
     private String logradouro;
@@ -36,4 +36,12 @@ public class Endereco {
     private int numero;
 
     private String complemento;
+
+    public Endereco(CadastroEnderecoDto dto) {
+        this.cep = dto.cep();
+        this.logradouro = dto.logradouro();
+        this.bairro = dto.bairro();
+        this.numero = dto.numero();
+        this.complemento = dto.complemento();
+    }
 }

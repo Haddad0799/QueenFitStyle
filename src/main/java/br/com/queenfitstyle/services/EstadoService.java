@@ -1,37 +1,27 @@
 package br.com.queenfitstyle.services;
 
-import br.com.queenfitstyle.models.DadoEstadoIbge;
+import br.com.queenfitstyle.dtos.CadastroEnderecoDto;
 import br.com.queenfitstyle.models.Estado;
 import br.com.queenfitstyle.repositorys.EstadoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EstadoService {
 
-    private final IntegracaoIbgeApiService integracaoIbgeApiService;
     private final EstadoRepository estadoRepository;
 
-    public EstadoService(IntegracaoIbgeApiService integracaoIbgeApiService, EstadoRepository estadoRepository) {
-        this.integracaoIbgeApiService = integracaoIbgeApiService;
+    public EstadoService(EstadoRepository estadoRepository) {
         this.estadoRepository = estadoRepository;
     }
 
-    public void buscarESalvarEstados(String endpoint) {
+    @Transactional
+    protected Estado getEstado(CadastroEnderecoDto dto) {
 
-        List<DadoEstadoIbge> estadosIbgeApiResponse = integracaoIbgeApiService.buscarDados(DadoEstadoIbge[].class, endpoint);
+        if(estadoRepository.existsByUf(dto.uf())) {
+           return estadoRepository.findEstadoByUf(dto.uf());
+        }
 
-        List<Estado> estados = estadosIbgeApiResponse.stream()
-                .map(Estado::new)
-                .toList();
-
-        // Salva todos os estados no banco de dados
-        estadoRepository.saveAll(estados);
+        return estadoRepository.save(new Estado(dto));
     }
-
-    public boolean dataBaseJaPopulado(){
-        return estadoRepository.count() > 0;
-    }
-
 }
