@@ -40,6 +40,6 @@ public class JwtAutenticationService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findUsuarioBylogin(username);
+        return usuarioRepository.findBylogin(username);
     }
 }

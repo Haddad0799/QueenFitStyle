@@ -33,7 +33,7 @@ public class Endereco {
 
     private String bairro;
 
-    private int numero;
+    private Integer numero;
 
     private String complemento;
 

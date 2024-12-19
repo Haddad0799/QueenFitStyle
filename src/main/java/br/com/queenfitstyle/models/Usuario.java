@@ -53,7 +53,6 @@ public class Usuario implements UserDetails {
         return roles;
     }
 
-
     @Override
     public String getPassword() {
         return senha;

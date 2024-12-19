@@ -42,13 +42,17 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
             }
 
             String tokenJwt = recuperarToken(request);
+            System.out.printf(tokenJwt);
 
             String subject = jwtUtil.getSubject(tokenJwt);
+            System.out.printf(subject);
 
             UserDetails userDetails = jwtAutenticationService.loadUserByUsername(subject);
+            System.out.printf(userDetails.toString());
 
             var usuarioAutenticado = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(usuarioAutenticado);
+            System.out.printf(usuarioAutenticado.toString());
 
             filterChain.doFilter(request, response);
         } catch (AuthenticationException authException) {
@@ -61,8 +65,8 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
     private Boolean isEndpointLiberado(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         return requestUri.equalsIgnoreCase("/login") ||
-                requestUri.equalsIgnoreCase("/register") ||
-                requestUri.startsWith("/enderecos/") ||
+                requestUri.equalsIgnoreCase("/register/cliente") ||
+                requestUri.startsWith("/endereco/search/") ||
                 requestUri.startsWith("/swagger-ui") ||
                 requestUri.startsWith("/v3/api-docs");
     }

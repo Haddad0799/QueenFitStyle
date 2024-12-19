@@ -26,4 +26,9 @@ public class Cidade {
         this.nome = nome;
         this.estado = estado;
     }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+        estado.getCidades().add(this);
+    }
 }

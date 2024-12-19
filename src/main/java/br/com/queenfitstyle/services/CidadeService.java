@@ -3,6 +3,7 @@ package br.com.queenfitstyle.services;
 import br.com.queenfitstyle.models.Cidade;
 import br.com.queenfitstyle.models.Estado;
 import br.com.queenfitstyle.repositorys.CidadeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class CidadeService {
         this.cidadeRepository = cidadeRepository;
     }
 
+    @Transactional
     protected Cidade getCidade(String nome, Estado estado) {
 
         if(cidadeRepository.existsByNomeAndEstado(nome,estado)) {

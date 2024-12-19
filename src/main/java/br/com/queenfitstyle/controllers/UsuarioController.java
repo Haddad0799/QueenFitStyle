@@ -18,7 +18,7 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-    @PostMapping
+    @PostMapping("/cliente")
     public ResponseEntity<String> cadastrarCliente(@RequestBody @Valid CadastroUsuarioDto dto) {
         usuarioService.cadastrarUsuarioCliente(dto);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");

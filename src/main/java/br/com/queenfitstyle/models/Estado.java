@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Estado {
     private String nome;
 
     @OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cidade> cidades;
+    private List<Cidade> cidades = new ArrayList<>();
 
 
     public Estado(CadastroEnderecoDto dto) {

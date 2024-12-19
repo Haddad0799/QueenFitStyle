@@ -2,7 +2,8 @@ package br.com.queenfitstyle.services;
 
 import br.com.queenfitstyle.dtos.CadastroEnderecoDto;
 import br.com.queenfitstyle.dtos.DadoCepApi;
-import br.com.queenfitstyle.dtos.EnderecoDto;
+import br.com.queenfitstyle.dtos.DetalhamentoEnderecoDto;
+import br.com.queenfitstyle.exceptions.CepNotFoundException;
 import br.com.queenfitstyle.infra.service.IntegracaoApiCepService;
 import br.com.queenfitstyle.infra.util.EndpointBuilder;
 import br.com.queenfitstyle.models.*;
@@ -35,22 +36,21 @@ public class EnderecoService {
         DadoCepApi dadoCepApi = integracaoApiCepService.buscarCep(endpoint);
 
         if(dadoCepApi == null || dadoCepApi.localidade() == null) {
-            throw new RuntimeException();
+            throw new CepNotFoundException();
         }
         return dadoCepApi;
     }
 
-
     @Transactional
-    public EnderecoDto cadastrarEndereco(CadastroEnderecoDto dto) {
-        Cliente cliente = clienteService.findByUsuario(dto.usuarioId());
+    public DetalhamentoEnderecoDto cadastrarEndereco(CadastroEnderecoDto dto, Long userId) {
+        Cliente cliente = clienteService.findByUsuario(userId);
         Estado estado = estadoService.getEstado(dto);
         Cidade cidade = cidadeService.getCidade(dto.localidade(), estado);
-        estado.getCidades().add(cidade);
+        cidade.setEstado(estado);
         Endereco endereco = new Endereco(dto);
         endereco.setCidade(cidade);
         cliente.setEndereco(endereco);
         enderecoRepository.save(endereco);
-        return new EnderecoDto(endereco);
+        return new DetalhamentoEnderecoDto(endereco);
     }
 }

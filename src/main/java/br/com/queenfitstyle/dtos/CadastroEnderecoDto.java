@@ -1,15 +1,22 @@
 package br.com.queenfitstyle.dtos;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record CadastroEnderecoDto(
 
-        Long usuarioId,
+        @NotBlank
         String cep,
+        @NotBlank
         String logradouro,
         String complemento,
+        @NotBlank
         String bairro,
-        int numero,
+        Integer numero,
+        @NotBlank
         String localidade,
+        @NotBlank
         String uf,
+        @NotBlank
         String estado
 
 ) {

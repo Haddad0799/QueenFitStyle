@@ -26,10 +26,14 @@ public class Cliente {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_id")
-    @Setter
     private Endereco endereco;
 
     private String telefone;
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+        endereco.setCliente(this);
+    }
 
 }
 

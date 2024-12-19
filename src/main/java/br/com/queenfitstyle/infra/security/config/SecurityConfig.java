@@ -38,8 +38,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/enderecos/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register/cliente").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/endereco/search/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/endereco/{userId}/cadastrar").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/register/admin").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")

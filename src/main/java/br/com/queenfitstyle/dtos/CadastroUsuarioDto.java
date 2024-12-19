@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public record CadastroUsuarioDto(
 
+
         @NotNull
         @Email(message = "Email inválido")
         String email,
@@ -16,5 +17,7 @@ public record CadastroUsuarioDto(
         @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
                 message = "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
         String senha
+
+
 ) {
 }
